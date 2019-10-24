@@ -40,8 +40,9 @@ def graph():
 	with open(filepath, 'r') as f:
 		times = []
 		values = []
-		hll = []
 		legends = []
+		colors = ["rgba(176,224,230,1)", "rgba(12,28,56,1)", "rgba(132,175,212,1)", "rgba(203,167,249,1)", 
+		"rgba(255,157,162,1)", "rgba(148, 7, 34,1)", "rgba(95,75,139,1)", "rgba(98,3,23,1)", "rgba(11,39,25,1)", "rgba(255,45,81,1)"]
 		csv_reader = csv.reader(f, delimiter=',')
 		count = 0
 		star = 1
@@ -55,5 +56,17 @@ def graph():
 			else:
 				legends = row[1:11]
 			count = count + 1
+		dataObjects = []
+		index = 0
+		for value in values:
+			obj = {}
+			obj['label'] = legends[index]
+			obj['fill'] = False
+			obj['borderColor'] = colors[index]
+			obj['backgroundColor'] = colors[index]
+			obj['data'] = value
+			index = index+1
+			dataObjects.append(obj)
+			print(dataObjects)
 		return render_template('graph.html', values=values, labels=times, legends=legends)
 	
