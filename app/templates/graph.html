@@ -1,0 +1,146 @@
+<head>
+  <meta charset="utf-8" />
+  <title>元气运动员实时数据监测图表</title>
+  <!-- import plugin script -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}"/>
+  <script src='static/javascript/Chart.min.js'></script>
+</head>
+
+<h1>元气运动员实时数据监测图表</h1>
+
+<div class = "center">
+  <button type="button" class="button" onclick="window.location.href='{{ url_for('index') }}';">显示数据</button>
+</div>
+<!-- bar chart canvas element -->
+<div class='chart'>
+	<canvas id="myChart" width="1600" height="600"></canvas>
+</div>
+
+<script>
+Chart.defaults.global.responsive = false;
+ 
+// define the chart data
+var chartData = {
+  labels : [{% for item in labels %}
+             "{{item}}",
+            {% endfor %}],
+  datasets : [
+  	{
+      label: '{{ legends[1] }}',
+      fill: false,
+      borderColor: "rgba(12,28,56,1)",
+      backgroundColor: "rgba(12,28,56,1)",
+      data : [{% for item in values[1] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[0] }}',
+      fill: false,
+      borderColor: "rgba(176,224,230,1)",
+      backgroundColor: "rgba(176,224,230,1)",
+      data : [{% for item in values[0] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[2] }}',
+      fill: false,
+      borderColor: "rgba(132,175,212,1)",
+      backgroundColor: "rgba(132,175,212,1)",
+      data : [{% for item in values[2] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[3] }}',
+      fill: false,
+      borderColor: "rgba(203,167,249,1)",
+      backgroundColor: "rgba(203,167,249,1)",
+      data : [{% for item in values[3] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[4] }}',
+      fill: false,
+      borderColor: "rgba(100,61,59,1)",
+      backgroundColor: "rgba(100,61,59,1)",
+      data : [{% for item in values[4] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[5] }}',
+      fill: false,
+      borderColor: "rgba(148, 7, 34,1)",
+      backgroundColor: "rgba(148, 7, 34,1)",
+      data : [{% for item in values[5] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[6] }}',
+      fill: false,
+      borderColor: "rgba(95,75,139,1)",
+      backgroundColor: "rgba(95,75,139,1)",
+      data : [{% for item in values[6] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[7] }}',
+      fill: false,
+      borderColor: "rgba(98,3,23,1)",
+      backgroundColor: "rgba(98,3,23,1)",
+      data : [{% for item in values[7] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[8] }}',
+      fill: false,
+      borderColor: "rgba(11,39,25,1)",
+      backgroundColor: "rgba(11,39,25,1)",
+      data : [{% for item in values[8] %}
+                {{item}},
+              {% endfor %}]
+  	},
+  	{
+      label: '{{ legends[9] }}',
+      fill: false,
+      borderColor: "rgba(255,45,81,1)",
+      backgroundColor: "rgba(255,45,81,1)",
+      data : [{% for item in values[9] %}
+                {{item}},
+              {% endfor %}]
+  	}
+  ]
+}
+ 
+// get chart canvas
+var ctx = document.getElementById("myChart").getContext("2d");
+ 
+// create the chart using the chart canvas
+var myChart = new Chart(ctx, {
+  type: 'line',
+  data: chartData,
+  options: {
+  	tooltips: {
+  		mode: 'index',
+  		interest: 'false'
+  	},
+  	hover: {
+  		mode: 'nearest',
+  		intersect: 'true'
+  	}
+  }
+});
+
+// var holder = document.getElementById("myChart");
+// var pointSelected = document.getElementById("pointSelected");
+// holder.onclick = function(evt){
+// var activePoint = myChart.getElementAtEvent(evt);
+// 	pointSelected.innerHTML = 'Point selected... index: ' + activePoint[0]._index;
+// };
+</script>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}"/>
+	<title>元气运动员实时数据监测 {{date}}</title>
+</head>
+<body>
+	<h1>元气运动员实时数据监测图表</h1>
+
+	<div class = "center">
+		<button type="button" class="button" onclick="window.location.href='{{ url_for('graph') }}';">显示图表</button>
+	</div>
+	<div class="table">
+		{% block body %}
+		{{ data|safe }}
+		{% endblock %}  
+	</div>
+</body>
+</html>
