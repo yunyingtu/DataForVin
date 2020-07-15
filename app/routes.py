@@ -18,24 +18,29 @@ def index():
 	dataset = tablib.Dataset()
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
 	filepath = f'{app.instance_path}/data/{currentDate}.csv'
-	with open(filepath, 'r') as f:
-		dataset.csv = f.read()
-		data = dataset.html
-		return render_template('index.html', data=data, date = currentDate)
+	table = pd.read_csv(filepath)
+	return render_template("index.html", data=table.to_html(), date = date)
+	# with open(filepath, 'r') as f:
+	# 	dataset.csv = f.read()
+	# 	data = dataset.html
+	# 	return render_template('index.html', data=data, date = currentDate)
 
 @app.route('/<date>')
 def showDate(date):
 	dataset = tablib.Dataset()
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
 	filepath = f'{app.instance_path}/data/{currentDate}.csv'
-	with open(filepath, 'r') as f:
-		dataset.csv = f.read()
-		data = dataset.html
-		return render_template('index.html', data=data, date = date)
+	table = pd.read_csv(filepath)
+	return render_template("index.html", data=table.to_html(), date = date)
+	# with open(filepath, 'r') as f:
+	# 	dataset.csv = f.read()
+	# 	data = dataset.html
+	# 	return render_template('index.html', data=data, date = date)
 
 @app.route('/graph')
 def graph():
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
+	print(currentDate)
 	filepath = f'{app.instance_path}/data/{currentDate}.csv'
 	with open(filepath, 'r') as f:
 		times = []
@@ -52,7 +57,7 @@ def graph():
 			if count != 0:
 				times.append(row[0])
 				for i in range(1, 11):
-					values[i-1].append(row[i+10])
+					values[i-1].append(row[i])
 			else:
 				legends = row[1:11]
 			count = count + 1
