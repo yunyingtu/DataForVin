@@ -1,25 +1,17 @@
 <head>
   <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   <title>{{title}}</title>
   <!-- import plugin script -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}"/>
   <script src='static/javascript/Chart.min.js'></script>
 </head>
 
+{% include 'nav.html' %}
+
 <h1>{{title}}</h1>
 
-<div class = "center">
-  {% if request.path == url_for('graph') %}
-      <button type="button" class="button" onclick="window.location.href='{{ url_for('index') }}';">显示宣誓人数据</button>
-      <button type="button" class="button" onclick="window.location.href='{{ url_for('peace') }}';">显示和平精英数据</button>
-      <button type="button" class="button" onclick="window.location.href='{{ url_for('peaceGraph') }}';">显示和平精英图表</button>
-  {% endif %}
-  {% if request.path == url_for('peaceGraph') %}
-      <button type="button" class="button" onclick="window.location.href='{{ url_for('index') }}';">显示宣誓人数据</button>
-      <button type="button" class="button" onclick="window.location.href='{{ url_for('graph') }}';">显示宣誓人图表</button>
-      <button type="button" class="button" onclick="window.location.href='{{ url_for('peace') }}';">显示和平精英数据</button>
-  {% endif %}
-</div>
 <!-- bar chart canvas element -->
 <div class='chart'>
 	<canvas id="myChart" width="1600" height="600"></canvas>
@@ -145,11 +137,4 @@ var myChart = new Chart(ctx, {
   	}
   }
 });
-
-// var holder = document.getElementById("myChart");
-// var pointSelected = document.getElementById("pointSelected");
-// holder.onclick = function(evt){
-// var activePoint = myChart.getElementAtEvent(evt);
-// 	pointSelected.innerHTML = 'Point selected... index: ' + activePoint[0]._index;
-// };
 </script>
