@@ -3,13 +3,22 @@
 <head>
 	<meta charset="utf-8" />
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}"/>
-	<title>元气运动员实时数据监测 {{date}}</title>
+	<title>{{title}}</title>
 </head>
 <body>
-	<h1>元气运动员实时数据监测图表</h1>
+	<h1>{{title}}</h1>
 
 	<div class = "center">
-		<button type="button" class="button" onclick="window.location.href='{{ url_for('graph') }}';">显示图表</button>
+	  {% if request.path == url_for('index') %}
+	      <button type="button" class="button" onclick="window.location.href='{{ url_for('graph') }}';">显示宣誓人图表</button>
+	      <button type="button" class="button" onclick="window.location.href='{{ url_for('peace') }}';">显示和平精英数据</button>
+	      <button type="button" class="button" onclick="window.location.href='{{ url_for('peaceGraph') }}';">显示和平精英图表</button>
+	  {% endif %}
+	  {% if request.path == url_for('peace') %}
+	      <button type="button" class="button" onclick="window.location.href='{{ url_for('index') }}';">显示宣誓人数据</button>
+	      <button type="button" class="button" onclick="window.location.href='{{ url_for('graph') }}';">显示宣誓人图表</button>
+	      <button type="button" class="button" onclick="window.location.href='{{ url_for('peaceGraph') }}';">显示和平精英图表</button>
+	  {% endif %}
 	</div>
 	<div class="table">
 		{% block body %}

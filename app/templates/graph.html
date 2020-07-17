@@ -1,15 +1,24 @@
 <head>
   <meta charset="utf-8" />
-  <title>元气运动员实时数据监测图表</title>
+  <title>{{title}}</title>
   <!-- import plugin script -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}"/>
   <script src='static/javascript/Chart.min.js'></script>
 </head>
 
-<h1>元气运动员实时数据监测图表</h1>
+<h1>{{title}}</h1>
 
 <div class = "center">
-  <button type="button" class="button" onclick="window.location.href='{{ url_for('index') }}';">显示数据</button>
+  {% if request.path == url_for('graph') %}
+      <button type="button" class="button" onclick="window.location.href='{{ url_for('index') }}';">显示宣誓人数据</button>
+      <button type="button" class="button" onclick="window.location.href='{{ url_for('peace') }}';">显示和平精英数据</button>
+      <button type="button" class="button" onclick="window.location.href='{{ url_for('peaceGraph') }}';">显示和平精英图表</button>
+  {% endif %}
+  {% if request.path == url_for('peaceGraph') %}
+      <button type="button" class="button" onclick="window.location.href='{{ url_for('index') }}';">显示宣誓人数据</button>
+      <button type="button" class="button" onclick="window.location.href='{{ url_for('graph') }}';">显示宣誓人图表</button>
+      <button type="button" class="button" onclick="window.location.href='{{ url_for('peace') }}';">显示和平精英数据</button>
+  {% endif %}
 </div>
 <!-- bar chart canvas element -->
 <div class='chart'>
@@ -25,21 +34,21 @@ var chartData = {
              "{{item}}",
             {% endfor %}],
   datasets : [
-  	{
-      label: '{{ legends[1] }}',
+    {
+      label: '{{ legends[0] }}',
       fill: false,
       borderColor: "rgba(12,28,56,1)",
       backgroundColor: "rgba(12,28,56,1)",
-      data : [{% for item in values[1] %}
+      data : [{% for item in values[0] %}
                 {{item}},
               {% endfor %}]
-  	},
+    },
   	{
-      label: '{{ legends[0] }}',
+      label: '{{ legends[1] }}',
       fill: false,
       borderColor: "rgba(176,224,230,1)",
       backgroundColor: "rgba(176,224,230,1)",
-      data : [{% for item in values[0] %}
+      data : [{% for item in values[1] %}
                 {{item}},
               {% endfor %}]
   	},
