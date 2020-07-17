@@ -1,0 +1,40 @@
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <title>2020超新星源榜单数据下载</title>
+  <!-- import plugin script -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}"/>
+  <script src='static/javascript/Chart.min.js'></script>
+</head>
+
+{% include 'nav.html' %}
+
+<div class='container pb-4'>
+  <div class='row'>
+    <div class="col-12">
+      <h1>2020超新星榜单源数据下载</h1>
+    </div>
+  </div>
+</div>
+
+<div class='container'>
+  <div class='row'>
+    <div class='col-6'>
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action list-group-item-secondary">宣誓人+旗手榜单</a>
+        {% for file in files %}
+            <a href="{{ url_for('downloadRawData', campaign = 'data', filename = file) }}" class="list-group-item list-group-item-action">{{ file }}</a></li>
+        {% endfor %}
+      </div>
+    </div>
+    <div class='col-6'>
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action list-group-item-secondary">和平精英榜单</a>
+        {% for file in files %}
+            <a href="{{ url_for('downloadRawData', campaign = 'peace', filename = file) }}" class="list-group-item list-group-item-action">{{ file }}</a></li>
+        {% endfor %}
+      </div>
+    </div>
+  <div>
+</div>
