@@ -9,7 +9,6 @@ import collections
 import os
 from datetime import datetime
 from app import app
-from lxml import etree
 
 dataDict = {}
 peaceCurrentData = {}
@@ -180,6 +179,8 @@ def fetchVoteData():
         if len(dataDict) != 0:
             for name in names:
                 newdata.append(stars[name] - dataDict[name])
+            for name in names:
+                newdata.append(0)
         writer.writerow(newdata)
         print(newdata)
         dataDict = newDict

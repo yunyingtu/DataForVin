@@ -86,6 +86,10 @@ def graph():
 			count = count + 1
 		dataObjects = []
 		index = 0
+		
+		values = trimData(values)
+		times = trimTime(times)
+
 		for value in values:
 			obj = {}
 			obj['label'] = legends[index]
@@ -121,12 +125,12 @@ def peaceGraph():
 			else:
 				legends = row[1:11]
 			count = count + 1
-
+		dataObjects = []
+		index = 0
+		
 		values = trimData(values)
 		times = trimTime(times)
 
-		dataObjects = []
-		index = 0
 		for value in values:
 			obj = {}
 			obj['label'] = legends[index]
@@ -151,6 +155,4 @@ def trimData(values):
 def trimTime(times):
 	if (len(times) < NUM_MAX_POINTS):
 		return times
-	return times[-NUM_MAX_POINTS:]
-
-	
+	return times[-NUM_MAX_POINTS:]	

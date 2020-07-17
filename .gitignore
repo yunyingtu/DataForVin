@@ -2,3 +2,8 @@
 __pycache__/
 instance/data/
 venv/
+runapp.ini
+nohup.out
+*.log
+instance/data/
+instance/peace/
