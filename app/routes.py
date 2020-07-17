@@ -12,6 +12,8 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
 
+NUM_MAX_POINTS = 90
+
 @app.route('/test')
 def test():
 	fetch.fetchPeaceData()
@@ -78,7 +80,7 @@ def graph():
 			if count != 0:
 				times.append(row[0])
 				for i in range(1, 11):
-					values[i-1].append(row[i])
+					values[i-1].append(row[i+10])
 			else:
 				legends = row[1:11]
 			count = count + 1
@@ -115,10 +117,14 @@ def peaceGraph():
 			if count != 0:
 				times.append(row[0])
 				for i in range(1, 11):
-					values[i-1].append(row[i])
+					values[i-1].append(row[i+10])
 			else:
 				legends = row[1:11]
 			count = count + 1
+
+		values = trimData(values)
+		times = trimTime(times)
+
 		dataObjects = []
 		index = 0
 		for value in values:
@@ -131,4 +137,20 @@ def peaceGraph():
 			index = index+1
 			dataObjects.append(obj)
 		return render_template('graph.html', title = title, values=values, labels=times, legends=legends)
+
+def trimData(values):
+	trimmedValues = []
+	length = len(values[0])
+	# 最多显示90个点
+	if (length < NUM_MAX_POINTS):
+		return values;
+	for value in values:
+		trimmedValues.append(value[-NUM_MAX_POINTS:])
+	return trimmedValues
+
+def trimTime(times):
+	if (len(times) < NUM_MAX_POINTS):
+		return times
+	return times[-NUM_MAX_POINTS:]
+
 	

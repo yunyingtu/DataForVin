@@ -82,6 +82,8 @@ def fetchPeaceData():
         if len(peaceCurrentData) != 0:
             for name in names:
                 newdata.append(participants[name] - peaceCurrentData[name])
+            for name in names:
+                newdata.append(0)
         writer.writerow(newdata)
         print(newdata)
         peaceCurrentData = newDict
