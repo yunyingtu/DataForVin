@@ -25,7 +25,7 @@ def index():
 	dataset = tablib.Dataset()
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
 	filepath = f'{app.instance_path}/data/{currentDate}.csv'
-	title = '超新星宣誓代表+护旗手' + currentDate
+	title = '超新星宣誓代表+护旗手 ' + currentDate
 	if os.path.exists(filepath):
 		table = pd.read_csv(filepath)
 		return render_template("index.html", data=table.to_html(), title = title)
