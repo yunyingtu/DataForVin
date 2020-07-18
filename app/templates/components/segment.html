@@ -1,6 +1,7 @@
-<div class='container pb-4 pt-4'>
+<div class='container pb-2 pt-2'>
   <div class='row'>
-      <div class="col-6 text-right">
+      <!-- 时间间隔选择器 -->
+      <div class="col-12 col-lg-6 text-center pb-2">
         <div class="btn-group blocks" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-secondary interval-one" onclick="refreshChartWithInterval(1)">1分钟</button>
           <button type="button" class="btn btn-outline-secondary interval-five" onclick="refreshChartWithInterval(5)">5分钟</button>
@@ -8,8 +9,10 @@
           <button type="button" class="btn btn-outline-secondary interval-thirty" onclick="refreshChartWithInterval(30)">30分钟</button>
         </div>
       </div>
-      <div class='col-4 text-left'>
-        <input type="text" class="dateselect form-control" placeholder='选择想查看的日期' required="required"/>
+
+      <!-- 日期选择器 -->
+      <div class='col-12 col-lg-6'>
+        <input type="text" class="dateselect form-control" placeholder='选择日期: {{date}}' required="required"/>
       </div>
   </div>
 </div>
@@ -27,8 +30,11 @@ function refreshChartWithInterval(interval) {
 }
 
 $(document).ready(function(){
-  var interval = window.location.href.split('=')[1]
-  console.log(interval)
+  var url = new URL(window.location.href)
+  var interval = url.searchParams.get('interval')
+  if (interval == null) {
+    interval = 5
+  }
   $(".btn-outline-secondary").each(function() {
     var buttonVal = $(this).text().split('分')[0]
     if (buttonVal == interval) {
@@ -42,8 +48,7 @@ $(document).ready(function(){
 $('.dateselect').datepicker({
       format: 'mm-dd-yyyy',
       startDate: '07-17-2020',
-      endDate:'10d',
-      todayHighlight: 'True'
+      endDate:'10d'
   }).on('changeDate', function(e) {
       var date = formatDate(e.date)
       window.location = chartWithParam('date', date)

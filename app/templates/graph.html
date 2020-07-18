@@ -1,6 +1,6 @@
-{% include 'head.html' %}
+{% include 'components/head.html' %}
 
-{% include 'nav.html' %}
+{% include 'components/nav.html' %}
 
 <!-- Title of the page -->
 <div class='container'>
@@ -12,11 +12,11 @@
 </div>
 
 <!-- Date and Interval selector -->
-{% include 'segment.html' %}
+{% include 'components/segment.html' %}
 
 <!-- bar chart canvas element -->
-<div class='container'>
-  <div class='row' style='height:40vh;'>
+<div class='container pt-2'>
+  <div class='row' style='height:50vh;'>
     <div class="col-12"><canvas id="myChart" class="chart"></canvas></div>
   </div>
 </div>
@@ -160,6 +160,9 @@ var myChart = new Chart(ctx, {
   		mode: 'nearest',
   		intersect: 'true'
   	},
+    legend: {
+      position: 'bottom'
+    },
     responsive: true,
     maintainAspectRatio: false
   }

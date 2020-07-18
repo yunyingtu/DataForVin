@@ -68,7 +68,7 @@ def rawData():
 	for day in range(startDate, currentDate + 1):
 		filename = '07-' + str(day) + '.csv'
 		filenames.append(filename)
-	return render_template("filelist.html", files = filenames)
+	return render_template("filelist.html", files = filenames, title='2020超新星榜单源数据下载')
 
 @app.route("/rawData/<path:campaign>/<path:filename>")
 def downloadRawData(campaign, filename):
@@ -135,7 +135,9 @@ def showDataInGraph(filepath, title, interval, graphFile):
 		values = trimData(values)
 		times = trimTime(times)
 
-		return render_template(graphFile, title = title, values=values, labels=times, legends=legends)
+		currentDate = datetime.now().strftime('%Y-%m-%d').strip('\"')
+
+		return render_template(graphFile, title = title, values=values, labels=times, legends=legends, date = currentDate)
 
 
 def trimData(values):
