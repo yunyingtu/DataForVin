@@ -16,6 +16,7 @@ import plotly.graph_objs as go
 
 NUM_MAX_POINTS = 90
 DEFAULT_INTERVAL = 5
+DEFAULT_TYPE = 'increase'
 CAMPAIGN_NAME = {'data':'宣誓人', 'peace':'和平精英'}
 
 @app.route('/test')
@@ -26,7 +27,6 @@ def test():
 @app.route('/')
 @app.route('/index')
 def index():
-	dataset = tablib.Dataset()
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
 	filepath = f'{app.instance_path}/data/{currentDate}.csv'
 	title = '超新星宣誓代表+护旗手 ' + currentDate
@@ -38,7 +38,6 @@ def index():
 
 @app.route('/peace')
 def peace():
-	dataset = tablib.Dataset()
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
 	filepath = f'{app.instance_path}/peace/{currentDate}.csv'
 	title = '超新星和平精英 ' + currentDate
@@ -83,7 +82,7 @@ def graph():
     title = f'超新星宣誓代表+护旗手实时数据图表 {date}'
     filepath = f'{app.instance_path}/data/{date}.csv'
     
-    return showDataInGraph(filepath, title, params['interval'], 'graph.html')
+    return showDataInGraph(filepath, title, params['interval'], params['type'], 'graph.html')
 
 @app.route('/peaceGraph')
 def peaceGraph():
@@ -92,7 +91,7 @@ def peaceGraph():
     title = f'超新星和平精英实时数据图表 {date}'
     filepath = f'{app.instance_path}/peace/{date}.csv'
 
-    return showDataInGraph(filepath, title, params['interval'], 'peaceGraph.html')
+    return showDataInGraph(filepath, title, params['interval'], params['type'], 'peaceGraph.html')
 
 def getGraphParam(request):
     params = {}
@@ -105,9 +104,14 @@ def getGraphParam(request):
     params['interval'] = DEFAULT_INTERVAL
     if intervalParam is not None:
         params['interval'] = int(intervalParam)
+
+    typeParam = request.args.get('type')
+    params['type'] = DEFAULT_TYPE
+    if typeParam is not None:
+        params['type'] = typeParam
     return params
 
-def showDataInGraph(filepath, title, interval, graphFile):
+def showDataInGraph(filepath, title, interval, type, graphFile):
 	with open(filepath, 'r') as f:
 		csv_reader = csv.reader(f, delimiter=',')
 
@@ -122,20 +126,23 @@ def showDataInGraph(filepath, title, interval, graphFile):
 		# 初始化到本日数据的第一行数据
 		previousCount = next(csv_reader)[1:11]
 		
-		# 开始阅读图标
+		# 开始阅读图表
 		index = 1 #这个是行数
 		for row in csv_reader:
 			if index % interval == 0:
 				times.append(row[0])
 				for i in range(1, 11):
-					values[i-1].append(int(row[i]) - int(previousCount[i-1]))
-					previousCount[i-1] = row[i]
+					if type == 'increase':
+						values[i-1].append(int(row[i]) - int(previousCount[i-1]))
+						previousCount[i-1] = row[i]
+					else:
+						values[i-1].append(int(row[i]))
 			index = index + 1
 		
 		values = trimData(values)
 		times = trimTime(times)
 
-		currentDate = datetime.now().strftime('%Y-%m-%d').strip('\"')
+		currentDate = datetime.now().strftime('%m-%d').strip('\"')
 
 		return render_template(graphFile, title = title, values=values, labels=times, legends=legends, date = currentDate)
 
