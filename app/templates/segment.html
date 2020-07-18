@@ -1,0 +1,20 @@
+<div class='container pb-2'>
+  <div class='row'>
+      <div class="col-12 text-center">
+        <div class="btn-group blocks" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshChartWithInterval(1)">1分钟</button>
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshChartWithInterval(5)">5分钟</button>
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshChartWithInterval(10)">10分钟</button>
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshChartWithInterval(30)">30分钟</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+function refreshChartWithInterval(interval) {
+  window.location = window.location.href.split('?')[0] + '?interval=' + interval
+}
+
+</script>

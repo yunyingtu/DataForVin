@@ -3,6 +3,7 @@
 
 from flask import render_template
 from flask import send_file
+from flask import request
 from app import app
 from app import fetch
 from datetime import datetime
@@ -14,6 +15,7 @@ import numpy as np
 import plotly.graph_objs as go
 
 NUM_MAX_POINTS = 90
+DEFAULT_INTERVAL = 5
 CAMPAIGN_NAME = {'data':'宣誓人', 'peace':'和平精英'}
 
 @app.route('/test')
@@ -76,17 +78,27 @@ def downloadRawData(campaign, filename):
 
 @app.route('/graph')
 def graph():
-	currentDate = datetime.now().strftime('%m-%d').strip('\"')
-	filepath = f'{app.instance_path}/data/{currentDate}.csv'
-	title = '超新星宣誓代表+护旗手实时数据图表 ' + currentDate
-	return showDataInGraph(filepath, title, 5, 'graph.html')
+    currentDate = datetime.now().strftime('%m-%d').strip('\"')
+    filepath = f'{app.instance_path}/data/{currentDate}.csv'
+    title = '超新星宣誓代表+护旗手实时数据图表 ' + currentDate
+
+    intervalParam = request.args.get('interval')
+    interval = DEFAULT_INTERVAL
+    if intervalParam is not None:
+        interval = int(intervalParam)
+    return showDataInGraph(filepath, title, interval, 'graph.html')
 
 @app.route('/peaceGraph')
 def peaceGraph():
-	currentDate = datetime.now().strftime('%m-%d').strip('\"')
-	filepath = f'{app.instance_path}/peace/{currentDate}.csv'
-	title = '超新星和平精英实时数据图表 ' + currentDate
-	return showDataInGraph(filepath, title, 1, 'peaceGraph.html')
+    currentDate = datetime.now().strftime('%m-%d').strip('\"')
+    filepath = f'{app.instance_path}/peace/{currentDate}.csv'
+    title = '超新星和平精英实时数据图表 ' + currentDate
+
+    intervalParam = request.args.get('interval')
+    interval = DEFAULT_INTERVAL
+    if intervalParam is not None:
+        interval = int(intervalParam)
+    return showDataInGraph(filepath, title, interval, 'peaceGraph.html')
 
 def showDataInGraph(filepath, title, interval, graphFile):
 	with open(filepath, 'r') as f:

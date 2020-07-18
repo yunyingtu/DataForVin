@@ -11,6 +11,7 @@
 
 {% include 'nav.html' %}
 
+<!-- Title of the page -->
 <div class='container pb-2'>
   <div class='row'>
     <div class="col-12">
@@ -19,12 +20,16 @@
   </div>
 </div>
 
+<!-- Segment Selector -->
+{% include 'segment.html' %}
+
 <!-- bar chart canvas element -->
 <div class='container'>
   <div class='row' style='height:40vh;'>
     <div class="col-12"><canvas id="myChart" class="chart"></canvas></div>
   </div>
 </div>
+
 
 <script>
 Chart.defaults.global.responsive = false;
