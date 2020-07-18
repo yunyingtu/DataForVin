@@ -72,7 +72,8 @@ def rawData():
 
 @app.route("/rawData/<path:campaign>/<path:filename>")
 def downloadRawData(campaign, filename):
-    dirpath = os.path.join(app.instance_path, campaign + '/' + filename)
+    dirpath = os.path.join('.' + app.instance_path, campaign + '/' + filename)
+    print(app.instance_path)
     newName = CAMPAIGN_NAME[campaign] + '-' + filename
     return send_file(dirpath, as_attachment=True, attachment_filename=newName)
 
