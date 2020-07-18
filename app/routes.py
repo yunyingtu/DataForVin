@@ -94,6 +94,19 @@ def peaceGraph():
 
     return showDataInGraph(filepath, title, params['interval'], 'peaceGraph.html')
 
+def getGraphParam(request):
+    params = {}
+    dateParam = request.args.get('date')
+    params['date'] = datetime.now().strftime('%m-%d').strip('\"')
+    if dateParam is not None:
+        params['date'] = dateParam
+
+    intervalParam = request.args.get('interval')
+    params['interval'] = DEFAULT_INTERVAL
+    if intervalParam is not None:
+        params['interval'] = int(intervalParam)
+    return params
+
 def showDataInGraph(filepath, title, interval, graphFile):
 	with open(filepath, 'r') as f:
 		csv_reader = csv.reader(f, delimiter=',')
