@@ -79,16 +79,16 @@ def graph():
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
 	filepath = f'{app.instance_path}/data/{currentDate}.csv'
 	title = '超新星宣誓代表+护旗手实时数据图表 ' + currentDate
-	return showDataInGraph(filepath, title, 5)
+	return showDataInGraph(filepath, title, 5, 'graph.html')
 
 @app.route('/peaceGraph')
 def peaceGraph():
 	currentDate = datetime.now().strftime('%m-%d').strip('\"')
 	filepath = f'{app.instance_path}/peace/{currentDate}.csv'
 	title = '超新星和平精英实时数据图表 ' + currentDate
-	return showDataInGraph(filepath, title, 1)
+	return showDataInGraph(filepath, title, 1, 'peaceGraph.html')
 
-def showDataInGraph(filepath, title, interval):
+def showDataInGraph(filepath, title, interval, graphFile):
 	with open(filepath, 'r') as f:
 		csv_reader = csv.reader(f, delimiter=',')
 
@@ -116,7 +116,7 @@ def showDataInGraph(filepath, title, interval):
 		values = trimData(values)
 		times = trimTime(times)
 
-		return render_template('graph.html', title = title, values=values, labels=times, legends=legends)
+		return render_template(graphFile, title = title, values=values, labels=times, legends=legends)
 
 
 def trimData(values):
