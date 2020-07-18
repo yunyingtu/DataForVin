@@ -78,27 +78,34 @@ def downloadRawData(campaign, filename):
 
 @app.route('/graph')
 def graph():
-    currentDate = datetime.now().strftime('%m-%d').strip('\"')
-    filepath = f'{app.instance_path}/data/{currentDate}.csv'
-    title = '超新星宣誓代表+护旗手实时数据图表 ' + currentDate
-
-    intervalParam = request.args.get('interval')
-    interval = DEFAULT_INTERVAL
-    if intervalParam is not None:
-        interval = int(intervalParam)
-    return showDataInGraph(filepath, title, interval, 'graph.html')
+    params = getGraphParam(request)
+    date = params['date']
+    title = f'超新星宣誓代表+护旗手实时数据图表 {date}'
+    filepath = f'{app.instance_path}/data/{date}.csv'
+    
+    return showDataInGraph(filepath, title, params['interval'], 'graph.html')
 
 @app.route('/peaceGraph')
 def peaceGraph():
-    currentDate = datetime.now().strftime('%m-%d').strip('\"')
-    filepath = f'{app.instance_path}/peace/{currentDate}.csv'
-    title = '超新星和平精英实时数据图表 ' + currentDate
+    params = getGraphParam(request)
+    date = params['date']
+    title = f'超新星和平精英实时数据图表 {date}'
+    filepath = f'{app.instance_path}/peace/{date}.csv'
 
+    return showDataInGraph(filepath, title, params['interval'], 'peaceGraph.html')
+
+def getGraphParam(request):
+    params = {}
+    dateParam = request.args.get('date')
+    params['date'] = datetime.now().strftime('%m-%d').strip('\"')
+    if dateParam is not None:
+        params['date'] = dateParam
+    
     intervalParam = request.args.get('interval')
-    interval = DEFAULT_INTERVAL
+    params['interval'] = DEFAULT_INTERVAL
     if intervalParam is not None:
-        interval = int(intervalParam)
-    return showDataInGraph(filepath, title, interval, 'peaceGraph.html')
+        params['interval'] = int(intervalParam)
+    return params
 
 def showDataInGraph(filepath, title, interval, graphFile):
 	with open(filepath, 'r') as f:
