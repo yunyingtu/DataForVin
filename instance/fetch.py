@@ -80,6 +80,9 @@ def fetchPeaceData():
         if len(peaceCurrentData) != 0:
             for name in names:
                 newdata.append(participants[name] - peaceCurrentData[name])
+        else:
+            for name in names:
+                newdata.append(0)
         writer.writerow(newdata)
         print(newdata)
         peaceCurrentData = newDict
@@ -176,6 +179,9 @@ def fetchVoteData():
         if len(dataDict) != 0:
             for name in names:
                 newdata.append(stars[name] - dataDict[name])
+        else:
+            for name in names:
+                newdata.append(0)
         writer.writerow(newdata)
         print(newdata)
         dataDict = newDict
