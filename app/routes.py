@@ -18,6 +18,8 @@ NUM_MAX_POINTS = 90
 DEFAULT_INTERVAL = 5
 DEFAULT_TYPE = 'increase'
 CAMPAIGN_NAME = {'data':'宣誓人', 'peace':'和平精英'}
+PEACE_TYPE = "peace"
+NORMAL_TYPE = "data"
 
 @app.route('/test')
 def test():
@@ -78,7 +80,7 @@ def downloadRawData(campaign, filename):
 
 @app.route('/graph')
 def graph():
-    params = getGraphParam(request)
+    params = getGraphParam(request, NORMAL_TYPE)
     date = params['date']
     title = f'超新星宣誓代表+护旗手实时数据图表 {date}'
     filepath = f'{app.instance_path}/data/{date}.csv'
@@ -87,19 +89,21 @@ def graph():
 
 @app.route('/peaceGraph')
 def peaceGraph():
-    params = getGraphParam(request)
+    params = getGraphParam(request, PEACE_TYPE)
     date = params['date']
     title = f'超新星和平精英实时数据图表 {date}'
     filepath = f'{app.instance_path}/peace/{date}.csv'
 
     return showDataInGraph(date, filepath, title, params['interval'], params['type'], 'peaceGraph.html')
 
-def getGraphParam(request):
+def getGraphParam(request, type):
     params = {}
     dateParam = request.args.get('date')
     params['date'] = datetime.now().strftime('%m-%d').strip('\"')
     if dateParam is not None:
         params['date'] = dateParam
+    elif type == PEACE_TYPE:
+    	params['date'] = '07-22'
 
     intervalParam = request.args.get('interval')
     params['interval'] = DEFAULT_INTERVAL
