@@ -1,29 +1,109 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8" />
-	<meta content='maximum-scale=1.0, initial-scale=1.0, width=device-width' name='viewport'>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}"/>
-	<title>{{title}}</title>
-</head>
+{% include 'components/head.html' %}
 
 <body>
 	{% include 'components/nav.html' %}
 
 	<div class='container pb-2'>
+
 	  <div class='row'>
 	    <div class="col-12">
 	      <h1>{{title}}</h1>
 	    </div>
 	  </div>
-	</div>
 
-	<div class="table">
-		{% block body %}
-		{{ data|safe }}
-		{% endblock %}  
+	  <div class="col-12 col-lg-4 text-center pb-2">
+        <div class="btn-group blocks" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshTableWithInterval(1)">1分钟</button>
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshTableWithInterval(5)">5分钟</button>
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshTableWithInterval(10)">10分钟</button>
+          <button type="button" class="btn btn-outline-secondary" onclick="refreshTableWithInterval(30)">30分钟</button>
+        </div>
+      </div>
+
+	  <div class='row'>
+	      <!-- 日期选择器 -->
+	      <div class='col-6 col-lg-4 text-center'>
+	        <input type="text" class="dateselect form-control" placeholder='选择日期: {{date}}' required="required"/>
+	      </div>
+	  </div>
+
+	  <div class='row'>
+	    <div class="col-12 col-lg-12 table">
+	      {% block body %}
+			{{ data|safe }}
+		  {% endblock %}
+	    </div>
+	  </div>
+
 	</div>
 </body>
+
+<script>
+	function tableWithParam(paramName, paramValue) {
+	  var url = new URL(window.location.href)
+	  url.searchParams.set(paramName, paramValue)
+	  return url
+	}
+
+	function refreshTableWithInterval(interval) {
+	  window.location = tableWithParam('interval', interval)
+	}
+
+	function refreshTableWithType(type) {
+	  window.location = tableWithParam('type', type)
+	}
+
+	$(document).ready(function(){
+	  var url = new URL(window.location.href)
+	  var interval = url.searchParams.get('interval')
+	  if (interval == null) {
+	    interval = 5
+	  }
+	  $(".btn-outline-secondary").each(function() {
+	    var buttonVal = $(this).text().split('分')[0]
+	    if (buttonVal == interval) {
+	      $(this).addClass("active")
+	    } else {
+	      $(this).removeClass("active")
+	    }
+	  })
+
+	  var type = url.searchParams.get('type')
+	  if (type == null) {
+	    type = 'increase'
+	  }
+	  var typeDict = {'total': '票数', 'increase': '涨幅'}
+	  $(".btn-type").each(function() {
+	    var buttonVal = $(this).text()
+	    if (buttonVal == typeDict[type]) {
+	      $(this).addClass("active")
+	    } else {
+	      $(this).removeClass("active")
+	    }
+	  })
+	});
+
+	$('.dateselect').datepicker({
+	      format: 'mm-dd-yyyy',
+	      startDate: '07-17-2020',
+	      endDate:'10d'
+	  }).on('changeDate', function(e) {
+	      var date = formatDate(e.date)
+	      window.location = tableWithParam('date', date)
+	  });
+
+	  function formatDate(date) {
+	    var month = '' + (date.getMonth() + 1)
+	    var day = '' + date.getDate()
+	    if (month.length < 2) 
+	        month = '0' + month;
+	    if (day.length < 2) 
+	        day = '0' + day;
+
+	    return [month, day].join('-');
+	  }
+
+</script>
 </html>

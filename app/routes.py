@@ -18,6 +18,8 @@ NUM_MAX_POINTS = 90
 DEFAULT_INTERVAL = 5
 DEFAULT_TYPE = 'increase'
 CAMPAIGN_NAME = {'data':'宣誓人', 'peace':'和平精英'}
+PEACE_TYPE = "peace"
+NORMAL_TYPE = "data"
 
 @app.route('/test')
 def test():
@@ -27,25 +29,19 @@ def test():
 @app.route('/')
 @app.route('/index')
 def index():
-	currentDate = datetime.now().strftime('%m-%d').strip('\"')
-	filepath = f'{app.instance_path}/data/{currentDate}.csv'
-	title = '超新星宣誓代表+护旗手 ' + currentDate
-	if os.path.exists(filepath):
-		table = pd.read_csv(filepath)
-		return render_template("index.html", data=table.to_html(), title = title)
-	else:
-		return 'File ' + filepath + ' not exists'
+	params = getGraphParam(request, NORMAL_TYPE)
+	date = params['date']
+	filepath = f'{app.instance_path}/data/{date}.csv'
+	title = '超新星宣誓代表+护旗手 ' + date
+	return showDataInTable(date, filepath, title, params['interval'])
 
 @app.route('/peace')
 def peace():
-	currentDate = datetime.now().strftime('%m-%d').strip('\"')
-	filepath = f'{app.instance_path}/peace/{currentDate}.csv'
-	title = '超新星和平精英 ' + currentDate
-	if os.path.exists(filepath):
-		table = pd.read_csv(filepath)
-		return render_template("index.html", data=table.to_html(), title = title)
-	else:
-		return 'File ' + filepath + ' not exists'
+	params = getGraphParam(request, PEACE_TYPE)
+	date = params['date']
+	filepath = f'{app.instance_path}/peace/{date}.csv'
+	title = '超新星和平精英 ' + date
+	return showDataInTable(date, filepath, title, params['interval'])
 
 @app.route('/<date>')
 def showDate(date):
@@ -78,7 +74,7 @@ def downloadRawData(campaign, filename):
 
 @app.route('/graph')
 def graph():
-    params = getGraphParam(request)
+    params = getGraphParam(request, NORMAL_TYPE)
     date = params['date']
     title = f'超新星宣誓代表+护旗手实时数据图表 {date}'
     filepath = f'{app.instance_path}/data/{date}.csv'
@@ -87,19 +83,21 @@ def graph():
 
 @app.route('/peaceGraph')
 def peaceGraph():
-    params = getGraphParam(request)
+    params = getGraphParam(request, PEACE_TYPE)
     date = params['date']
     title = f'超新星和平精英实时数据图表 {date}'
     filepath = f'{app.instance_path}/peace/{date}.csv'
 
     return showDataInGraph(date, filepath, title, params['interval'], params['type'], 'peaceGraph.html')
 
-def getGraphParam(request):
+def getGraphParam(request, type):
     params = {}
     dateParam = request.args.get('date')
     params['date'] = datetime.now().strftime('%m-%d').strip('\"')
     if dateParam is not None:
         params['date'] = dateParam
+    elif type == PEACE_TYPE:
+    	params['date'] = '07-22'
 
     intervalParam = request.args.get('interval')
     params['interval'] = DEFAULT_INTERVAL
@@ -111,6 +109,27 @@ def getGraphParam(request):
     if typeParam is not None:
         params['type'] = typeParam
     return params
+
+def showDataInTable(date, filepath, title, interval):
+	if os.path.exists(filepath):
+		table = pd.read_csv(filepath)
+
+		# 读取选手
+		stars = list(table.columns)[1:11]
+
+		# 读取N分钟前的数据
+		previous = table.iloc[-interval:-interval+1,1:11].values.tolist()[0]
+		dataList = table.iloc[-1:,1:11].values.tolist()[0]
+		increase = []
+
+		for index in range(0,10):
+			increase.append(dataList[index] - previous[index])
+
+		data = {'选手':stars, '当前票数':dataList, '涨幅':increase}
+		df=pd.DataFrame(data = data)
+		return render_template("index.html", data=df.to_html(index=False), title = title)
+	else:
+		return 'File ' + filepath + ' not exists'
 
 def showDataInGraph(date, filepath, title, interval, type, graphFile):
 	with open(filepath, 'r') as f:
